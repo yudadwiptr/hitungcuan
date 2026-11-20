@@ -60,21 +60,25 @@ export function GuideSection() {
   );
 }
 
-export function FaqSection() {
+export function FaqSection({
+  items = FAQ_ITEMS,
+  description = "Seputar HPP, margin, dan strategi harga di aplikasi pesan-antar.",
+}: {
+  items?: { q: string; a: string }[];
+  description?: string;
+}) {
   return (
-    <section id="faq" aria-labelledby="faq-title" className="scroll-mt-24">
+    <section id="faq" aria-labelledby="faq-title" className="scroll-mt-32 md:scroll-mt-24">
       <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         <div>
           <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-emerald-600">FAQ</p>
           <h2 id="faq-title" className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-[28px]">
             Pertanyaan yang sering ditanyakan
           </h2>
-          <p className="mt-2 text-[15px] leading-relaxed text-slate-600">
-            Seputar HPP, margin, dan strategi harga di aplikasi pesan-antar.
-          </p>
+          <p className="mt-2 text-[15px] leading-relaxed text-slate-600">{description}</p>
         </div>
         <div className="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
-          {FAQ_ITEMS.map((item, i) => (
+          {items.map((item, i) => (
             <details key={item.q} className="group px-5 py-1" open={i === 0}>
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-[14.5px] font-semibold text-slate-900 [&::-webkit-details-marker]:hidden">
                 {item.q}

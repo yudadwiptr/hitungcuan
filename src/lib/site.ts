@@ -9,7 +9,7 @@ function resolveSiteUrl(): string {
 export const siteConfig = {
   name: "HitungCuan",
   title: "HitungCuan — Kalkulator HPP & Harga Jual Kuliner UMKM",
-  shortDescription: "Kalkulator HPP & harga jual kuliner, gratis.",
+  shortDescription: "Kalkulator HPP, harga jual marketplace & simulasi KPR — gratis.",
   description:
     "Hitung HPP (Harga Pokok Penjualan) per porsi, tentukan harga jual offline & harga GoFood/GrabFood/ShopeeFood yang tetap untung setelah potongan komisi. Gratis, real-time, tanpa daftar.",
   url: resolveSiteUrl(),
@@ -26,6 +26,9 @@ export const siteConfig = {
     "margin keuntungan UMKM",
     "food cost calculator",
     "UMKM kuliner",
+    "kalkulator harga jual shopee",
+    "kalkulator reseller",
+    "simulasi KPR",
   ],
   /** Link halaman pembelian produk digital. Isi via env saat produknya siap. */
   templateUrl: process.env.NEXT_PUBLIC_TEMPLATE_URL || "#",

@@ -5,7 +5,7 @@ import type { Dispatch } from "react";
 import { formatNumber, formatRupiah } from "@/lib/format";
 import { UNITS, type CalcResult, type CalcState, type Ingredient, type Unit } from "@/lib/hpp";
 import { makeId, type Action } from "./state";
-import { AddRowButton, DecimalInput, MoneyInput, SectionCard, TextInput, UnitSuffix, cx } from "./ui";
+import { AddRowButton, DecimalInput, MoneyInput, SectionCard, Select, TextInput, UnitSuffix, cx } from "@/components/ui/form";
 
 const GRID =
   "grid grid-cols-6 gap-x-2.5 gap-y-2.5 @xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1.2fr)_minmax(0,1.45fr)_minmax(0,1.05fr)_minmax(0,0.95fr)_2.25rem] @xl:items-start @xl:gap-y-0";
@@ -32,9 +32,9 @@ export function IngredientsSection({
       title="Rincian Bahan Baku"
       description="Masukkan harga beli per kemasan & takaran per porsi — biaya per porsi dihitung otomatis."
       action={
-        <div className="rounded-lg bg-slate-50 px-3 py-1.5 text-right ring-1 ring-slate-200/70">
-          <div className="text-[10.5px] font-medium uppercase tracking-wide text-slate-400">Total / porsi</div>
-          <div className="text-sm font-semibold text-slate-900 tabular-nums">{formatRupiah(result.ingredientsTotal)}</div>
+        <div className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-emerald-50 py-1.5 pr-3.5 pl-3 ring-1 ring-emerald-600/15">
+          <span className="text-[11.5px] font-medium text-emerald-700/80">Total/porsi</span>
+          <span className="text-[14px] font-bold text-emerald-800 tabular-nums">{formatRupiah(result.ingredientsTotal)}</span>
         </div>
       }
     >
@@ -107,18 +107,13 @@ export function IngredientsSection({
                       placeholder="1000"
                       suffixPad="pr-16"
                       suffix={
-                        <select
-                          aria-label="Satuan"
+                        <Select
+                          ariaLabel="Satuan kemasan"
                           value={ing.unit}
-                          onChange={(e) => update(ing.id, { unit: e.target.value as Unit })}
-                          className="mr-1 h-8 cursor-pointer rounded-md border-0 bg-slate-100 px-1.5 text-[12px] font-medium text-slate-600 outline-none hover:bg-slate-200 focus:ring-2 focus:ring-emerald-500/30"
-                        >
-                          {UNITS.map((u) => (
-                            <option key={u.value} value={u.value}>
-                              {u.label}
-                            </option>
-                          ))}
-                        </select>
+                          options={UNITS}
+                          onChange={(unit: Unit) => update(ing.id, { unit })}
+                          className="mr-1.5"
+                        />
                       }
                     />
                   </div>

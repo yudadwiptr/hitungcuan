@@ -14,7 +14,7 @@ import {
   type RoundingStep,
 } from "@/lib/hpp";
 import type { Action } from "./state";
-import { DecimalInput, Segmented, SectionCard, Switch, UnitSuffix, cx } from "./ui";
+import { DecimalInput, Segmented, SectionCard, Switch, UnitSuffix, cx } from "@/components/ui/form";
 
 const MARGIN_MARKS = [20, 30, 35, 50, 60];
 

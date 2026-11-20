@@ -1,12 +1,12 @@
 "use client";
 
-import { AlertTriangle, Bike, Check, MessageCircle, RotateCcw, Store, TrendingUp } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { AlertTriangle, Bike, Store, TrendingUp } from "lucide-react";
 import { formatPercent, formatRupiah } from "@/lib/format";
 import type { CalcResult, CalcState } from "@/lib/hpp";
-import { buildWhatsAppSummary, copyText } from "@/lib/whatsapp";
-import { CostDonut, type DonutSegment } from "./CostDonut";
-import { cx } from "./ui";
+import { buildWhatsAppSummary } from "@/lib/whatsapp";
+import { ResultActions } from "@/components/ui/actions";
+import { CostDonut, type DonutSegment } from "@/components/ui/CostDonut";
+import { cx } from "@/components/ui/form";
 
 const COLORS = {
   ingredients: "#1E293B", // slate-800
@@ -24,35 +24,6 @@ export function SummaryPanel({
   result: CalcResult;
   onReset: () => void;
 }) {
-  const [copied, setCopied] = useState<"idle" | "ok" | "fail">("idle");
-  const [confirmReset, setConfirmReset] = useState(false);
-  const timers = useRef<number[]>([]);
-
-  useEffect(() => {
-    const list = timers.current;
-    return () => list.forEach((t) => window.clearTimeout(t));
-  }, []);
-
-  const later = (fn: () => void, ms: number) => {
-    timers.current.push(window.setTimeout(fn, ms));
-  };
-
-  const handleCopy = async () => {
-    const ok = await copyText(buildWhatsAppSummary(state, r));
-    setCopied(ok ? "ok" : "fail");
-    later(() => setCopied("idle"), 2400);
-  };
-
-  const handleReset = () => {
-    if (!confirmReset) {
-      setConfirmReset(true);
-      later(() => setConfirmReset(false), 3000);
-      return;
-    }
-    setConfirmReset(false);
-    onReset();
-  };
-
   const useOnline = state.onlineEnabled && r.commission > 0;
   const chartPrice = useOnline ? r.onlinePrice : r.offlinePrice;
   const chartProfit = useOnline ? r.profitOnline : r.profitOffline;
@@ -231,42 +202,7 @@ export function SummaryPanel({
           ))}
         </dl>
 
-        {/* Aksi */}
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={handleCopy}
-            className={cx(
-              "inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl text-[13.5px] font-semibold text-white shadow-sm transition focus-visible:outline-none focus-visible:ring-4",
-              copied === "fail"
-                ? "bg-rose-600 focus-visible:ring-rose-500/30"
-                : "bg-emerald-600 hover:bg-emerald-700 focus-visible:ring-emerald-500/30",
-            )}
-          >
-            {copied === "ok" ? (
-              <Check className="size-4" aria-hidden />
-            ) : (
-              <MessageCircle className="size-4" aria-hidden />
-            )}
-            {copied === "ok" ? "Tersalin! Tinggal paste" : copied === "fail" ? "Gagal menyalin" : "Salin ringkasan ke WhatsApp"}
-          </button>
-          <button
-            type="button"
-            onClick={handleReset}
-            className={cx(
-              "inline-flex h-11 items-center justify-center gap-1.5 rounded-xl px-3.5 text-[13px] font-medium ring-1 transition focus-visible:outline-none focus-visible:ring-4",
-              confirmReset
-                ? "bg-rose-50 text-rose-700 ring-rose-300 focus-visible:ring-rose-500/20"
-                : "bg-white text-slate-600 ring-slate-200 hover:bg-slate-50 hover:text-slate-900 focus-visible:ring-slate-400/20",
-            )}
-          >
-            <RotateCcw className="size-4" aria-hidden />
-            {confirmReset ? "Yakin?" : "Reset"}
-          </button>
-        </div>
-        <p className="sr-only" aria-live="polite">
-          {copied === "ok" ? "Ringkasan disalin ke clipboard" : ""}
-        </p>
+        <ResultActions getText={() => buildWhatsAppSummary(state, r)} onReset={onReset} />
       </div>
     </section>
   );

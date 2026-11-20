@@ -1,7 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { SiteHeader } from "@/components/layout/SiteHeader";
 import { siteConfig } from "@/lib/site";
+import { STUDIO } from "@/lib/tools";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -19,14 +22,13 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   applicationName: siteConfig.name,
   keywords: [...siteConfig.keywords],
-  authors: [{ name: siteConfig.name }],
-  creator: siteConfig.name,
+  authors: [{ name: STUDIO.name, url: STUDIO.url }],
+  creator: STUDIO.name,
+  publisher: siteConfig.name,
   category: "business",
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: siteConfig.locale,
-    url: "/",
     siteName: siteConfig.name,
     title: siteConfig.title,
     description: siteConfig.description,
@@ -54,7 +56,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="id" className={`${jakarta.variable} antialiased`}>
       <body className="min-h-dvh font-sans">
+        <SiteHeader />
         {children}
+        <SiteFooter />
         {siteConfig.adsenseClient && (
           <Script
             id="adsense"

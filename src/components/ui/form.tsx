@@ -1,7 +1,7 @@
 "use client";
 
-import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import { Check, ChevronDown, type LucideIcon } from "lucide-react";
+import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
 import { displayMoney, sanitizeDecimal, sanitizeMoney } from "@/lib/format";
 
 export function cx(...classes: (string | false | null | undefined)[]) {
@@ -53,7 +53,7 @@ export function SectionCard({
             {description && <p className="mt-0.5 text-[13px] leading-relaxed text-slate-500">{description}</p>}
           </div>
         </div>
-        {action}
+        {action && <div className="shrink-0">{action}</div>}
       </header>
       <div className="px-5 py-5 sm:px-6">{children}</div>
     </section>
@@ -285,5 +285,227 @@ export function AddRowButton({ children, onClick }: { children: ReactNode; onCli
       </span>
       {children}
     </button>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Select (dropdown custom, pola combobox + listbox WAI-ARIA)          */
+/* ------------------------------------------------------------------ */
+
+export interface SelectOption<T extends string> {
+  value: T;
+  label: string;
+  description?: string;
+}
+
+export function Select<T extends string>({
+  value,
+  options,
+  onChange,
+  ariaLabel,
+  variant = "inline",
+  className,
+}: {
+  value: T;
+  options: SelectOption<T>[];
+  onChange: (value: T) => void;
+  ariaLabel: string;
+  /** "inline" = chip kecil di dalam input, "field" = selebar input biasa */
+  variant?: "inline" | "field";
+  className?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const listId = useId();
+  const selectedIndex = Math.max(
+    0,
+    options.findIndex((o) => o.value === value),
+  );
+  const selected = options[selectedIndex];
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [open]);
+
+  const openList = () => {
+    setActive(selectedIndex);
+    setOpen(true);
+  };
+
+  const commit = (index: number) => {
+    onChange(options[index].value);
+    setOpen(false);
+    buttonRef.current?.focus();
+  };
+
+  const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
+    if (!open) {
+      if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) {
+        e.preventDefault();
+        openList();
+      }
+      return;
+    }
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setActive((i) => (i + 1) % options.length);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setActive((i) => (i - 1 + options.length) % options.length);
+        break;
+      case "Home":
+        e.preventDefault();
+        setActive(0);
+        break;
+      case "End":
+        e.preventDefault();
+        setActive(options.length - 1);
+        break;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        commit(active);
+        break;
+      case "Escape":
+        e.preventDefault();
+        setOpen(false);
+        break;
+      case "Tab":
+        setOpen(false);
+        break;
+    }
+  };
+
+  return (
+    <div ref={rootRef} className={cx("relative", className)}>
+      <button
+        ref={buttonRef}
+        type="button"
+        role="combobox"
+        aria-label={ariaLabel}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={listId}
+        aria-activedescendant={open ? `${listId}-${active}` : undefined}
+        onClick={() => (open ? setOpen(false) : openList())}
+        onKeyDown={onKeyDown}
+        className={cx(
+          "inline-flex items-center justify-between gap-1 font-semibold transition outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40",
+          variant === "inline"
+            ? "h-7 min-w-[3.25rem] rounded-md bg-slate-100 pr-1 pl-2 text-[12px] text-slate-700 hover:bg-slate-200/80"
+            : cx(inputBase, "w-full cursor-pointer text-left font-medium", open && "border-emerald-500 ring-4 ring-emerald-500/10"),
+          open && variant === "inline" && "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200",
+        )}
+      >
+        <span className="truncate">{selected?.label}</span>
+        <ChevronDown
+          className={cx("size-3.5 shrink-0 text-slate-400 transition-transform", open && "rotate-180 text-emerald-600")}
+          aria-hidden
+        />
+      </button>
+
+      {open && (
+        <ul
+          id={listId}
+          role="listbox"
+          aria-label={ariaLabel}
+          className={cx(
+            "absolute top-full z-30 mt-1.5 max-h-72 overflow-y-auto animate-hc-pop rounded-xl border border-slate-200 bg-white p-1 shadow-[0_12px_32px_-8px_rgba(15,23,42,0.22)]",
+            variant === "field" ? "left-0 w-full min-w-[12rem] origin-top" : "right-0 min-w-[13.5rem] origin-top-right",
+          )}
+        >
+          {options.map((opt, i) => {
+            const isSelected = opt.value === value;
+            return (
+              <li
+                key={opt.value}
+                id={`${listId}-${i}`}
+                role="option"
+                aria-selected={isSelected}
+                onMouseEnter={() => setActive(i)}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => commit(i)}
+                className={cx(
+                  "flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] transition-colors",
+                  i === active ? "bg-slate-100" : "",
+                  isSelected ? "text-emerald-700" : "text-slate-700",
+                )}
+              >
+                {variant === "inline" ? (
+                  <>
+                    <span
+                      className={cx(
+                        "grid h-6 min-w-8 place-items-center rounded-md px-1.5 text-[11.5px] font-bold",
+                        isSelected ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-600",
+                      )}
+                    >
+                      {opt.label}
+                    </span>
+                    <span className="flex-1 whitespace-nowrap text-[12.5px] text-slate-500">{opt.description}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="font-semibold">{opt.label}</span>
+                    <span className="flex-1 text-right text-[12px] text-slate-400 tabular-nums">{opt.description}</span>
+                  </>
+                )}
+                {isSelected && <Check className="size-4 text-emerald-600" aria-hidden />}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Slider                                                              */
+/* ------------------------------------------------------------------ */
+
+export function Slider({
+  id,
+  min,
+  max,
+  step = 1,
+  value,
+  onChange,
+  danger = false,
+  valueText,
+  className,
+}: {
+  id: string;
+  min: number;
+  max: number;
+  step?: number;
+  value: number;
+  onChange: (value: number) => void;
+  danger?: boolean;
+  valueText?: string;
+  className?: string;
+}) {
+  const fill = ((Math.min(Math.max(value, min), max) - min) / (max - min)) * 100;
+  return (
+    <input
+      id={id}
+      type="range"
+      min={min}
+      max={max}
+      step={step}
+      value={value}
+      onChange={(e) => onChange(Number(e.target.value))}
+      className={cx("hc-range", danger && "hc-range--thin", className)}
+      style={{ "--fill": `${fill}%` } as CSSProperties}
+      aria-valuetext={valueText}
+    />
   );
 }

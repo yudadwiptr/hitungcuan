@@ -4,7 +4,7 @@ import { Eraser, UtensilsCrossed } from "lucide-react";
 import type { Dispatch } from "react";
 import type { CalcState } from "@/lib/hpp";
 import type { Action } from "./state";
-import { DecimalInput, FieldLabel, GhostButton, SectionCard, TextInput, UnitSuffix } from "./ui";
+import { DecimalInput, FieldLabel, GhostButton, SectionCard, TextInput, UnitSuffix } from "@/components/ui/form";
 
 const QUICK_BATCH = ["1", "10", "25", "50"];
 

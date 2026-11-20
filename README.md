@@ -1,9 +1,15 @@
 # HitungCuan
 
-Kalkulator HPP (Harga Pokok Penjualan) & simulasi harga jual untuk UMKM kuliner Indonesia.
-Next.js (App Router) · TypeScript · Tailwind CSS v4 · Lucide Icons.
+Kalkulator cuan gratis untuk Indonesia — Next.js (App Router) · TypeScript · Tailwind CSS v4 · Lucide Icons.
+Built by [Yuma Studio](https://yumastudio.digital/).
 
-## Fitur
+| Halaman | Kalkulator |
+| --- | --- |
+| `/` | HPP & harga jual kuliner UMKM (offline + GoFood/GrabFood/ShopeeFood) |
+| `/jualan-online` | Harga jual marketplace & reseller (Shopee, Tokopedia/TikTok Shop, Lazada, FB/WA) + perbandingan platform |
+| `/kpr` | Simulasi KPR bunga fix → floating, total bunga, dana awal, rasio cicilan/gaji, tabel angsuran |
+
+## Fitur kalkulator HPP kuliner
 
 - **Bahan baku dinamis** — biaya per porsi = (harga beli ÷ isi kemasan) × takaran, plus kebutuhan per batch.
 - **Kemasan & operasional** per porsi, dengan quick-add item umum.
@@ -36,11 +42,13 @@ src/
     whatsapp.ts        builder teks ringkasan WhatsApp + clipboard
     site.ts            konfigurasi situs, env, link afiliasi
   components/
-    calculator/        HppCalculator (state + useMemo), section input, SummaryPanel, CostDonut
+    calculator/        HppCalculator (state + useMemo), section input, SummaryPanel
+    marketplace/, kpr/ kalkulator jualan online & KPR (logika di lib/marketplace.ts, lib/kpr.ts)
+    ui/                form controls (Select, Slider, …), CalculatorLayout, CostDonut, autosave hook
     monetization/      AdSlot, UpsellTemplateCard, AffiliateTools
     content/           Panduan rumus & FAQ (konten SEO)
     brand/, layout/    Logo, header, footer
-scripts/generate-icons.mjs   generate favicon.ico & PNG ikon dari src/app/icon.svg
+scripts/generate-brand.mjs   logo transparan + favicon/ikon dari brand/logo-source.jpg
 ```
 
-Ubah logo? Edit `src/app/icon.svg` lalu jalankan `node scripts/generate-icons.mjs`.
+Ubah logo? Ganti `brand/logo-source.jpg` (wordmark di latar krem) lalu jalankan `node scripts/generate-brand.mjs`.

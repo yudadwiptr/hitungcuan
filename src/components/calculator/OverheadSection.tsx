@@ -6,7 +6,7 @@ import { OPERATIONAL_SUGGESTIONS, PACKAGING_SUGGESTIONS } from "@/lib/defaults";
 import { formatRupiah } from "@/lib/format";
 import type { CalcResult, CalcState, CostListKey } from "@/lib/hpp";
 import { makeId, type Action } from "./state";
-import { MoneyInput, SectionCard, TextInput } from "./ui";
+import { MoneyInput, SectionCard, TextInput } from "@/components/ui/form";
 
 function CostList({
   list,

@@ -2,10 +2,10 @@ import { parseDecimal, parseMoney } from "./format";
 
 export type Unit = "gram" | "ml" | "pcs";
 
-export const UNITS: { value: Unit; label: string }[] = [
-  { value: "gram", label: "g" },
-  { value: "ml", label: "ml" },
-  { value: "pcs", label: "pcs" },
+export const UNITS: { value: Unit; label: string; description: string }[] = [
+  { value: "gram", label: "g", description: "Gram · bubuk, padat" },
+  { value: "ml", label: "ml", description: "Mililiter · cairan" },
+  { value: "pcs", label: "pcs", description: "Pieces · butir, buah" },
 ];
 
 export interface Ingredient {
