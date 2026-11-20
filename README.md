@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HitungCuan
 
-## Getting Started
+Kalkulator HPP (Harga Pokok Penjualan) & simulasi harga jual untuk UMKM kuliner Indonesia.
+Next.js (App Router) · TypeScript · Tailwind CSS v4 · Lucide Icons.
 
-First, run the development server:
+## Fitur
+
+- **Bahan baku dinamis** — biaya per porsi = (harga beli ÷ isi kemasan) × takaran, plus kebutuhan per batch.
+- **Kemasan & operasional** per porsi, dengan quick-add item umum.
+- **Simulasi margin** 10–80% (margin dari harga jual), pembulatan harga ke atas (100/500/1.000).
+- **Komisi aplikasi online** (0% dine-in, 20% ojol, custom) — harga online = harga offline ÷ (1 − komisi), jadi laba bersih tetap utuh.
+- **Panel ringkasan sticky** + donut chart proporsi harga, peringatan margin tipis (< 15%).
+- **Salin ringkasan ke WhatsApp** & reset; data tersimpan otomatis di `localStorage` (tidak dikirim ke server).
+- **Monetisasi non-intrusif**: slot AdSense 728×90 / 320×100, kartu upsell template Excel (modal preview), box tools afiliasi.
+- **SEO**: metadata lengkap, Open Graph image dinamis, JSON-LD (WebApplication + FAQPage), sitemap, robots, web manifest, favicon/apple-icon.
+
+## Menjalankan
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build && npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Salin `.env.example` → `.env.local` dan isi `NEXT_PUBLIC_SITE_URL` (wajib saat produksi) serta ID AdSense / link afiliasi jika sudah ada.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Struktur
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+  app/                 layout, page, metadata routes (OG, sitemap, robots, manifest, ikon)
+  lib/
+    hpp.ts             tipe & fungsi murni `calculate()` — inti rumus
+    format.ts          format Rupiah & parsing angka gaya Indonesia (deterministik, aman hydration)
+    defaults.ts        data contoh "Es Kopi Susu Gula Aren"
+    whatsapp.ts        builder teks ringkasan WhatsApp + clipboard
+    site.ts            konfigurasi situs, env, link afiliasi
+  components/
+    calculator/        HppCalculator (state + useMemo), section input, SummaryPanel, CostDonut
+    monetization/      AdSlot, UpsellTemplateCard, AffiliateTools
+    content/           Panduan rumus & FAQ (konten SEO)
+    brand/, layout/    Logo, header, footer
+scripts/generate-icons.mjs   generate favicon.ico & PNG ikon dari src/app/icon.svg
+```
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ubah logo? Edit `src/app/icon.svg` lalu jalankan `node scripts/generate-icons.mjs`.
