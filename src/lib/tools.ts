@@ -3,6 +3,8 @@ export type ToolIcon = "kuliner" | "marketplace" | "kpr";
 export interface Tool {
   href: string;
   nav: string;
+  /** Label pendek di samping logo, mis. "hitungcuan. | KPR" */
+  label: string;
   title: string;
   description: string;
   icon: ToolIcon;
@@ -14,6 +16,7 @@ export const TOOLS: Tool[] = [
   {
     href: "/",
     nav: "HPP Kuliner",
+    label: "Kuliner",
     title: "Kalkulator HPP & Harga Jual Kuliner",
     description: "Hitung modal per porsi, harga jual offline, dan harga GoFood/GrabFood/ShopeeFood yang tetap untung.",
     icon: "kuliner",
@@ -22,6 +25,7 @@ export const TOOLS: Tool[] = [
   {
     href: "/jualan-online",
     nav: "Jualan Online",
+    label: "Jualan Online",
     title: "Kalkulator Harga Jual Marketplace",
     description: "Untuk reseller & seller Shopee, Tokopedia, TikTok Shop, Lazada, sampai Facebook Marketplace.",
     icon: "marketplace",
@@ -30,6 +34,7 @@ export const TOOLS: Tool[] = [
   {
     href: "/kpr",
     nav: "Simulasi KPR",
+    label: "KPR",
     title: "Kalkulator Simulasi KPR",
     description: "Cicilan rumah dengan bunga fix + floating, total bunga, dana awal, dan cek kemampuan bayar.",
     icon: "kpr",

@@ -9,17 +9,31 @@ import { TOOLS } from "@/lib/tools";
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const current = TOOLS.find((t) => t.href === pathname);
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/80 backdrop-blur-lg supports-[backdrop-filter]:bg-white/75">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link
-          href="/"
-          aria-label="HitungCuan — beranda"
-          className="shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500/20"
-        >
-          <Logo priority className="h-6 w-auto sm:h-7" />
-        </Link>
+        <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+          <Link
+            href="/"
+            aria-label="HitungCuan — beranda"
+            className="shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500/20"
+          >
+            <Logo priority className="h-6 w-auto sm:h-7" />
+          </Link>
+          {current && (
+            <>
+              <span aria-hidden className="h-5 w-px shrink-0 bg-slate-300 sm:h-6" />
+              <span
+                key={current.href}
+                className="animate-hc-pop truncate text-[13px] font-bold tracking-tight text-slate-500 sm:text-[15px]"
+              >
+                {current.label}
+              </span>
+            </>
+          )}
+        </div>
 
         <nav aria-label="Kalkulator" className="hidden items-center gap-1 rounded-xl bg-slate-100/80 p-1 md:flex">
           {TOOLS.map((tool) => {

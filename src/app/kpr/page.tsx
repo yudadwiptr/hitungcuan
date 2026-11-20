@@ -3,6 +3,7 @@ import { CalendarClock, Home, Landmark, Percent, ShieldCheck, TrendingUp, Zap } 
 import { Eq, FormulaGuide, Frac, Num, Op, Pow, Term, Var } from "@/components/content/FormulaGuide";
 import { FaqSection } from "@/components/content/GuideSection";
 import { KprCalculator } from "@/components/kpr/KprCalculator";
+import { KprHeadline } from "@/components/kpr/KprHeadline";
 import { OtherTools } from "@/components/layout/OtherTools";
 import { PageHero } from "@/components/layout/PageHero";
 import { AdSlot } from "@/components/monetization/AdSlot";
@@ -65,11 +66,10 @@ export default function KprPage() {
           eyebrow={
             <>
               <Home className="size-3.5 text-emerald-600" aria-hidden />
-              Rencanakan rumah impian dengan angka yang jujur
+              Kalkulator Simulasi KPR Rumah
             </>
           }
-          title="Kalkulator Simulasi"
-          highlight="KPR Rumah"
+          heading={<KprHeadline />}
           description="Hitung cicilan KPR dengan skema bunga fix lalu floating seperti penawaran bank sungguhan. Lihat total bunga, dana awal yang harus disiapkan, dan apakah cicilannya masih sehat untuk penghasilanmu."
           points={[
             { icon: Zap, label: "Real-time" },

@@ -39,6 +39,38 @@ html:has(dialog[open]) {
   }
 }
 
+/* ---------- Permainan kata judul KPR: cuan → cicilan ---------- */
+.hc-strike {
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: hc-strike 450ms cubic-bezier(0.65, 0, 0.35, 1) 700ms forwards;
+}
+.hc-swap-out {
+  animation: hc-swap-out 380ms ease-in 1500ms forwards;
+}
+.hc-swap-in {
+  opacity: 0;
+  transform: translateY(0.45em);
+  animation: hc-swap-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) 1650ms forwards;
+}
+@keyframes hc-strike {
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes hc-swap-out {
+  to {
+    opacity: 0;
+    transform: translateY(-0.45em);
+  }
+}
+@keyframes hc-swap-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ---------- Slider margin ---------- */
 .hc-range {
   --track: #e2e8f0;
@@ -88,5 +120,10 @@ html:has(dialog[open]) {
   *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+  }
+  .hc-strike,
+  .hc-swap-out,
+  .hc-swap-in {
+    animation-delay: 0s !important;
   }
 }
