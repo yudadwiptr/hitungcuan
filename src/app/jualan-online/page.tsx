@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { BadgePercent, Calculator, Layers, Scale, ShoppingBag, Store, Zap } from "lucide-react";
-import { FormulaGuide } from "@/components/content/FormulaGuide";
+import { Eq, FormulaGuide, Frac, Num, Op, Term } from "@/components/content/FormulaGuide";
 import { FaqSection } from "@/components/content/GuideSection";
 import { OtherTools } from "@/components/layout/OtherTools";
 import { PageHero } from "@/components/layout/PageHero";
@@ -88,10 +88,78 @@ export default function JualanOnlinePage() {
             title="Rumus harga jual marketplace yang dipakai HitungCuan"
             description="Potongan marketplace dihitung dari harga yang dibayar pembeli, jadi markup-nya harus dihitung dari belakang."
             steps={[
-              { icon: Layers, title: "Total modal per unit", formula: "Harga beli + Biaya tambahan", body: "Masukkan juga packing, ongkir dari supplier, lakban, sampai biaya iklan per unit." },
-              { icon: Store, title: "Potongan platform", formula: "% admin + % layanan + biaya/pesanan", body: "Biaya persentase dihitung dari harga yang dibayar pembeli, biaya tetap per pesanan ditambahkan." },
-              { icon: Calculator, title: "Harga dibayar pembeli", formula: "(Modal + biaya/pesanan) ÷ (1 − potongan − margin)", body: "Hasilnya: setelah dipotong, laba bersih tetap sesuai target margin." },
-              { icon: BadgePercent, title: "Harga tayang", formula: "Harga dibayar ÷ (1 − voucher toko)", body: "Kalau kamu memberi voucher/diskon, harga tayang dinaikkan agar margin tidak tergerus." },
+              {
+                icon: Layers,
+                title: "Total modal per unit",
+                formulaLabel: "Harga beli ditambah biaya tambahan",
+                formula: (
+                  <Eq>
+                    <Term>Harga beli</Term>
+                    <Op>+</Op>
+                    <Term>Biaya tambahan</Term>
+                  </Eq>
+                ),
+                body: "Masukkan juga packing, ongkir dari supplier, lakban, sampai biaya iklan per unit.",
+              },
+              {
+                icon: Store,
+                title: "Potongan platform",
+                formulaLabel: "Persen admin ditambah persen layanan, plus biaya per pesanan",
+                formula: (
+                  <Eq>
+                    <Term>% admin</Term>
+                    <Op>+</Op>
+                    <Term>% layanan</Term>
+                    <Op>+</Op>
+                    <Term>Biaya/pesanan</Term>
+                  </Eq>
+                ),
+                body: "Persentase dihitung dari harga yang dibayar pembeli, biaya tetap per pesanan ditambahkan.",
+              },
+              {
+                icon: Calculator,
+                title: "Harga dibayar pembeli",
+                formulaLabel: "Modal ditambah biaya per pesanan, dibagi satu dikurangi potongan dikurangi margin",
+                formula: (
+                  <Frac
+                    num={
+                      <>
+                        <Term>Modal</Term>
+                        <Op>+</Op>
+                        <Term>Biaya/pesanan</Term>
+                      </>
+                    }
+                    den={
+                      <>
+                        <Num>1</Num>
+                        <Op>−</Op>
+                        <Term>Potongan</Term>
+                        <Op>−</Op>
+                        <Term>Margin</Term>
+                      </>
+                    }
+                  />
+                ),
+                body: "Setelah dipotong marketplace, laba bersih tetap sesuai target margin.",
+              },
+              {
+                icon: BadgePercent,
+                title: "Harga tayang",
+                formulaLabel: "Harga dibayar dibagi satu dikurangi voucher",
+                formula: (
+                  <Frac
+                    num={<Term accent>Harga dibayar</Term>}
+                    den={
+                      <>
+                        <Num>1</Num>
+                        <Op>−</Op>
+                        <Term>Voucher</Term>
+                      </>
+                    }
+                  />
+                ),
+                body: "Kalau kamu memberi voucher/diskon toko, harga tayang dinaikkan agar margin tidak tergerus.",
+              },
             ]}
           />
           <OtherTools current="/jualan-online" />

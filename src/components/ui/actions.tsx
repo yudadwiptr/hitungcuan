@@ -52,7 +52,16 @@ export function ResultActions({ getText, onReset }: { getText: () => string; onR
           )}
         >
           {copied === "ok" ? <Check className="size-4" aria-hidden /> : <MessageCircle className="size-4" aria-hidden />}
-          {copied === "ok" ? "Tersalin! Tinggal paste" : copied === "fail" ? "Gagal menyalin" : "Salin ringkasan ke WhatsApp"}
+          {copied === "ok" ? (
+            "Tersalin! Tinggal paste"
+          ) : copied === "fail" ? (
+            "Gagal menyalin"
+          ) : (
+            <>
+              <span className="sm:hidden">Salin ke WhatsApp</span>
+              <span className="hidden sm:inline">Salin ringkasan ke WhatsApp</span>
+            </>
+          )}
         </button>
         <button
           type="button"

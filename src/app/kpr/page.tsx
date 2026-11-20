@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { CalendarClock, Home, Landmark, Percent, ShieldCheck, TrendingUp, Zap } from "lucide-react";
-import { FormulaGuide } from "@/components/content/FormulaGuide";
+import { Eq, FormulaGuide, Frac, Num, Op, Pow, Term, Var } from "@/components/content/FormulaGuide";
 import { FaqSection } from "@/components/content/GuideSection";
 import { KprCalculator } from "@/components/kpr/KprCalculator";
 import { OtherTools } from "@/components/layout/OtherTools";
@@ -87,10 +87,102 @@ export default function KprPage() {
             title="Cara HitungCuan menghitung simulasi KPR"
             description="Metode anuitas — sama seperti yang umum dipakai bank di Indonesia."
             steps={[
-              { icon: Landmark, title: "Plafon pinjaman", formula: "Harga properti − DP", body: "Semakin besar DP, semakin kecil pokok pinjaman dan total bunga yang dibayar." },
-              { icon: Percent, title: "Cicilan masa fix", formula: "P × r ÷ (1 − (1 + r)^−n)", body: "r = bunga fix ÷ 12, n = total bulan tenor. Cicilan tetap selama masa fix." },
-              { icon: CalendarClock, title: "Cicilan floating", formula: "Sisa pokok × r' ÷ (1 − (1 + r')^−n')", body: "Dihitung ulang dari sisa pokok dengan bunga floating untuk sisa bulan tenor." },
-              { icon: ShieldCheck, title: "Kemampuan bayar", formula: "Cicilan ÷ Penghasilan ≤ 30%", body: "Batas aman yang umum dipakai bank untuk menilai kelayakan KPR." },
+              {
+                icon: Landmark,
+                title: "Plafon pinjaman",
+                formulaLabel: "Harga properti dikurangi DP",
+                formula: (
+                  <Eq>
+                    <Term>Harga properti</Term>
+                    <Op>−</Op>
+                    <Term>DP</Term>
+                  </Eq>
+                ),
+                body: "Semakin besar DP, semakin kecil pokok pinjaman dan total bunga yang dibayar.",
+              },
+              {
+                icon: Percent,
+                title: "Cicilan masa fix",
+                formulaLabel: "P kali r dibagi satu dikurangi satu tambah r pangkat minus n",
+                formula: (
+                  <Frac
+                    num={
+                      <>
+                        <Var>P</Var>
+                        <Op>×</Op>
+                        <Var>r</Var>
+                      </>
+                    }
+                    den={
+                      <>
+                        <Num>1</Num>
+                        <Op>−</Op>
+                        <Pow
+                          base={
+                            <>
+                              <Num>(1</Num>
+                              <Op>+</Op>
+                              <Var>r</Var>
+                              <Num>)</Num>
+                            </>
+                          }
+                          exp="−n"
+                        />
+                      </>
+                    }
+                  />
+                ),
+                legend: "P = plafon · r = bunga fix ÷ 12 · n = total bulan",
+                body: "Metode anuitas: cicilan sama setiap bulan selama masa bunga fix.",
+              },
+              {
+                icon: CalendarClock,
+                title: "Cicilan floating",
+                formulaLabel: "S kali r aksen dibagi satu dikurangi satu tambah r aksen pangkat minus n aksen",
+                formula: (
+                  <Frac
+                    num={
+                      <>
+                        <Var>S</Var>
+                        <Op>×</Op>
+                        <Var>r′</Var>
+                      </>
+                    }
+                    den={
+                      <>
+                        <Num>1</Num>
+                        <Op>−</Op>
+                        <Pow
+                          base={
+                            <>
+                              <Num>(1</Num>
+                              <Op>+</Op>
+                              <Var>r′</Var>
+                              <Num>)</Num>
+                            </>
+                          }
+                          exp="−n′"
+                        />
+                      </>
+                    }
+                  />
+                ),
+                legend: "S = sisa pokok · r′ = bunga floating ÷ 12 · n′ = sisa bulan",
+                body: "Dihitung ulang dari sisa pokok saat masa fix berakhir, untuk sisa tenor.",
+              },
+              {
+                icon: ShieldCheck,
+                title: "Kemampuan bayar",
+                formulaLabel: "Cicilan dibagi penghasilan, maksimal 30 persen",
+                formula: (
+                  <Eq>
+                    <Frac num={<Term>Cicilan</Term>} den={<Term>Penghasilan</Term>} />
+                    <Op>≤</Op>
+                    <Term accent>30%</Term>
+                  </Eq>
+                ),
+                body: "Batas aman yang umum dipakai bank untuk menilai kelayakan KPR.",
+              },
             ]}
           />
           <OtherTools current="/kpr" />

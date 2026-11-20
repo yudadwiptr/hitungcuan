@@ -1,62 +1,79 @@
 import { Bike, Calculator, ChevronDown, Layers, Target } from "lucide-react";
 import { FAQ_ITEMS } from "./faq";
-
-const STEPS = [
-  {
-    icon: Layers,
-    title: "Biaya bahan per porsi",
-    formula: "(Harga beli ÷ Isi kemasan) × Takaran",
-    body: "Ubah harga kemasan jadi harga per gram/ml/pcs, lalu kalikan dengan takaran yang dipakai di satu porsi.",
-  },
-  {
-    icon: Calculator,
-    title: "Total HPP",
-    formula: "Bahan baku + Kemasan + Operasional",
-    body: "Jangan lupa biaya tersembunyi: cup, sedotan, gas, listrik, sampai upah karyawan yang dibagi per porsi.",
-  },
-  {
-    icon: Target,
-    title: "Harga jual offline",
-    formula: "HPP ÷ (1 − Target margin)",
-    body: "Margin dihitung dari harga jual, jadi laba bersih yang kamu targetkan benar-benar masuk kantong.",
-  },
-  {
-    icon: Bike,
-    title: "Harga aplikasi online",
-    formula: "Harga offline ÷ (1 − Komisi)",
-    body: "Markup otomatis supaya setelah dipotong komisi GoFood/GrabFood/ShopeeFood, laba bersihmu tetap utuh.",
-  },
-];
+import { Eq, FormulaGuide, Frac, Num, Op, Term } from "./FormulaGuide";
 
 export function GuideSection() {
   return (
-    <section id="cara-hitung" aria-labelledby="cara-hitung-title" className="scroll-mt-24">
-      <div className="max-w-2xl">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-emerald-600">Cara hitung</p>
-        <h2 id="cara-hitung-title" className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-[28px]">
-          Rumus HPP & harga jual yang dipakai HitungCuan
-        </h2>
-        <p className="mt-2 text-[15px] leading-relaxed text-slate-600">
-          Empat langkah sederhana yang biasa dipakai konsultan F&B — sekarang otomatis, real-time, dan gratis.
-        </p>
-      </div>
-
-      <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {STEPS.map((s, i) => (
-          <li key={s.title} className="relative rounded-2xl border border-slate-200 bg-white p-5">
-            <div className="flex items-center justify-between">
-              <span className="grid size-9 place-items-center rounded-xl bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/10">
-                <s.icon className="size-[18px]" aria-hidden />
-              </span>
-              <span className="text-[28px] font-bold text-slate-100 tabular-nums">0{i + 1}</span>
-            </div>
-            <h3 className="mt-4 text-[15px] font-semibold text-slate-900">{s.title}</h3>
-            <p className="mt-2 rounded-lg bg-slate-900 px-3 py-2 font-mono text-[12px] text-emerald-300">{s.formula}</p>
-            <p className="mt-3 text-[13px] leading-relaxed text-slate-500">{s.body}</p>
-          </li>
-        ))}
-      </ol>
-    </section>
+    <FormulaGuide
+      title="Rumus HPP & harga jual yang dipakai HitungCuan"
+      description="Empat langkah sederhana yang biasa dipakai konsultan F&B — sekarang otomatis, real-time, dan gratis."
+      steps={[
+        {
+          icon: Layers,
+          title: "Biaya bahan per porsi",
+          formulaLabel: "Harga beli dibagi isi kemasan, dikali takaran",
+          formula: (
+            <Eq>
+              <Frac num={<Term>Harga beli</Term>} den={<Term>Isi kemasan</Term>} />
+              <Op>×</Op>
+              <Term>Takaran</Term>
+            </Eq>
+          ),
+          body: "Ubah harga kemasan jadi harga per gram/ml/pcs, lalu kalikan dengan takaran yang dipakai di satu porsi.",
+        },
+        {
+          icon: Calculator,
+          title: "Total HPP",
+          formulaLabel: "Bahan baku ditambah kemasan ditambah operasional",
+          formula: (
+            <Eq>
+              <Term>Bahan baku</Term>
+              <Op>+</Op>
+              <Term>Kemasan</Term>
+              <Op>+</Op>
+              <Term>Operasional</Term>
+            </Eq>
+          ),
+          body: "Jangan lupa biaya tersembunyi: cup, sedotan, gas, listrik, sampai upah karyawan yang dibagi per porsi.",
+        },
+        {
+          icon: Target,
+          title: "Harga jual offline",
+          formulaLabel: "HPP dibagi satu dikurangi target margin",
+          formula: (
+            <Frac
+              num={<Term accent>HPP</Term>}
+              den={
+                <>
+                  <Num>1</Num>
+                  <Op>−</Op>
+                  <Term>Margin</Term>
+                </>
+              }
+            />
+          ),
+          body: "Margin dihitung dari harga jual, jadi laba bersih yang kamu targetkan benar-benar masuk kantong.",
+        },
+        {
+          icon: Bike,
+          title: "Harga aplikasi online",
+          formulaLabel: "Harga offline dibagi satu dikurangi komisi",
+          formula: (
+            <Frac
+              num={<Term accent>Harga offline</Term>}
+              den={
+                <>
+                  <Num>1</Num>
+                  <Op>−</Op>
+                  <Term>Komisi</Term>
+                </>
+              }
+            />
+          ),
+          body: "Markup otomatis supaya setelah dipotong komisi GoFood/GrabFood/ShopeeFood, laba bersihmu tetap utuh.",
+        },
+      ]}
+    />
   );
 }
 
