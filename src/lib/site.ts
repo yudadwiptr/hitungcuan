@@ -33,6 +33,11 @@ export const siteConfig = {
   /** Link halaman pembelian produk digital. Isi via env saat produknya siap. */
   templateUrl: process.env.NEXT_PUBLIC_TEMPLATE_URL || "#",
   adsenseClient: process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "",
+  /** Iklan internal yang tampil selama slot AdSense kosong. */
+  houseAd: {
+    href: "https://yumastudio.digital/?utm_source=hitungcuan&utm_medium=banner&utm_campaign=house_ad",
+    alt: "Yuma Studio — jasa bikin website & aplikasi. Konsultasi gratis!",
+  },
   adsenseSlots: {
     top: process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP || "",
   },
